@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-17'
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: python3.10
+    Environment:
+      Variables:
+        USE_BEDROCK: 'true'
+Resources:
+  ClinicalFlowApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: '''POST,OPTIONS'''
+        AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
+        AllowOrigin: '''*'''
+  TriageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: TriageFunction
+      Handler: clinicalflow_ai.lambda_handler.lambda_handler
+      Events:
+        TriageApi:
+          Type: Api
+          Properties:
+            Path: /triage
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - bedrock:InvokeModel
+          Resource: arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0
+      Environment:
+        Variables:
+          PYTHONPATH: /var/task/src
+    Metadata:
+      SamResourceId: TriageFunction
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value:
+      Fn::Sub: https://${ClinicalFlowApi}.execute-api.${AWS::Region}.amazonaws.com/prod/
