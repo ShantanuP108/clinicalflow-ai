@@ -14,4 +14,4 @@ An autonomous healthcare operations agent for the AWS AI Agent Global Hackathon.
 **Architecture**
 📊 [View Interactive Architecture Diagram](https://shantanup108.github.io/clinicalflow-ai/docs/healthcare_architecture_diagram.html)
 
-![Architecture Preview](docs/architecture_preview.png)
+![Architecture Preview](docs/healthcare_architecture_diagram.png)
