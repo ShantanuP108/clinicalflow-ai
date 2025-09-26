@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Triage System Architecture</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .title {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        
+        .tech-badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .badge {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.3);
+        }
+        
+        .architecture {
+            position: relative;
+            margin: 40px 0;
+        }
+        
+        .layer {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .layer-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .components {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .component {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 3px solid;
+            min-width: 140px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .component:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .user { border-color: #3498db; }
+        .api-gateway { border-color: #e67e22; }
+        .orchestrator { border-color: #9b59b6; }
+        .lambda { border-color: #f39c12; }
+        .ai { border-color: #1abc9c; }
+        .database { border-color: #34495e; }
+        .external { border-color: #e74c3c; }
+        .notification { border-color: #16a085; }
+        
+        .component-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        .component-subtitle {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        
+        .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .user .icon { color: #3498db; }
+        .api-gateway .icon { color: #e67e22; }
+        .orchestrator .icon { color: #9b59b6; }
+        .lambda .icon { color: #f39c12; }
+        .ai .icon { color: #1abc9c; }
+        .database .icon { color: #34495e; }
+        .external .icon { color: #e74c3c; }
+        .notification .icon { color: #16a085; }
+        
+        .arrow {
+            font-size: 2em;
+            color: #95a5a6;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+        
+        .flow-description {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(9, 132, 227, 0.3);
+        }
+        
+        .flow-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .flow-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #fdcb6e;
+        }
+        
+        .step-number {
+            font-weight: 700;
+            color: #fdcb6e;
+            font-size: 1.2em;
+        }
+        
+        .parallel-flows {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            gap: 20px;
+        }
+        
+        .flow-branch {
+            flex: 1;
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .flow-branch.triage {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+        }
+        
+        .branch-title {
+            font-weight: 700;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .components {
+                flex-direction: column;
+            }
+            
+            .parallel-flows {
+                flex-direction: column;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .flow-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 6px solid #e17055;
+        }
+        
+        .highlight-title {
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🏥 AI-Powered Healthcare Triage System</h1>
+            <p class="subtitle">Intelligent Patient Assessment & Automated Appointment Scheduling</p>
+            <div class="tech-badges">
+                <span class="badge">AWS Lambda</span>
+                <span class="badge">Amazon Bedrock</span>
+                <span class="badge">Claude 3.5 Sonnet</span>
+                <span class="badge">DynamoDB</span>
+                <span class="badge">API Gateway</span>
+                <span class="badge">Google Calendar</span>
+            </div>
+        </div>
+        
+        <div class="architecture">
+            <!-- User Layer -->
+            <div class="layer">
+                <div class="components">
+                    <div class="component user">
+                        <span class="icon">👤</span>
+                        <div class="component-title">Patient/User</div>
+                        <div class="component-subtitle">Submits symptoms via HTTP POST</div>
+                    </div>
+                    <div class="arrow">↓</div>
+                </div>
+            </div>
+            
+            <!-- API Gateway Layer -->
+            <div class="layer">
+                <div class="components">
+                    <div class="component api-gateway">
+                        <span class="icon">🌐</span>
+                        <div class="component-title">API Gateway</div>
+                        <div class="component-subtitle">Production Stage</div>
+                    </div>
+                    <div class="arrow">↓</div>
+                </div>
+            </div>
+            
+            <!-- Orchestrator Layer -->
+            <div class="layer">
+                <div class="components">
+                    <div class="component orchestrator">
+                        <span class="icon">🎯</span>
+                        <div class="component-title">Orchestrator Lambda</div>
+                        <div class="component-subtitle">Workflow Management</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Parallel Processing -->
+            <div class="parallel-flows">
+                <div class="flow-branch triage">
+                    <div class="branch-title">🤖 AI Triage Branch</div>
+                    <div style="margin: 15px 0;">
+                        <div class="component lambda" style="margin: 10px 0;">
+                            <span class="icon">⚡</span>
+                            <div class="component-title">Triage Function</div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="component ai" style="margin: 10px 0;">
+                            <span class="icon">🧠</span>
+                            <div class="component-title">Bedrock AI</div>
+                            <div class="component-subtitle">Claude 3.5 Sonnet</div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="component database" style="margin: 10px 0;">
+                            <span class="icon">💾</span>
+                            <div class="component-title">Patient Records</div>
+                            <div class="component-subtitle">DynamoDB</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flow-branch">
+                    <div class="branch-title">📅 Scheduling Branch</div>
+                    <div style="margin: 15px 0;">
+                        <div class="component lambda" style="margin: 10px 0;">
+                            <span class="icon">⚡</span>
+                            <div class="component-title">Scheduler Function</div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="component external" style="margin: 10px 0;">
+                            <span class="icon">📅</span>
+                            <div class="component-title">Google Calendar</div>
+                            <div class="component-subtitle">API Integration</div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="component database" style="margin: 10px 0;">
+                            <span class="icon">💾</span>
+                            <div class="component-title">Appointments</div>
+                            <div class="component-subtitle">DynamoDB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notification Layer -->
+            <div class="layer">
+                <div class="components">
+                    <div class="component notification">
+                        <span class="icon">📱</span>
+                        <div class="component-title">SNS Alert</div>
+                        <div class="component-subtitle">SMS/Email to Physician</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="component notification">
+                        <span class="icon">🔔</span>
+                        <div class="component-title">Notifier Function</div>
+                        <div class="component-subtitle">Patient Confirmation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Return Flow -->
+            <div class="layer">
+                <div class="components">
+                    <div class="component user">
+                        <span class="icon">✅</span>
+                        <div class="component-title">Complete Response</div>
+                        <div class="component-subtitle">Full workflow JSON returned</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-description">
+            <div class="flow-title">🚀 System Workflow</div>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1.</div>
+                    <strong>Patient Input:</strong> User submits symptoms via secure API endpoint
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2.</div>
+                    <strong>AI Triage:</strong> Claude 3.5 Sonnet analyzes symptoms and determines urgency
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3.</div>
+                    <strong>Data Storage:</strong> Triage results stored in DynamoDB for audit trail
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4.</div>
+                    <strong>Auto-Scheduling:</strong> Appointment booked via Google Calendar API
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">5.</div>
+                    <strong>Notifications:</strong> Real-time alerts sent to physician and patient
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">6.</div>
+                    <strong>Response:</strong> Complete workflow status returned to user
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight-box">
+            <div class="highlight-title">🏆 Key Innovation Points</div>
+            <p><strong>AI-First Approach:</strong> Leverages state-of-the-art Claude 3.5 Sonnet for intelligent medical triage</p>
+            <p><strong>Serverless Architecture:</strong> Fully scalable, cost-effective Lambda-based solution</p>
+            <p><strong>Real-time Integration:</strong> Seamless Google Calendar integration for instant appointment booking</p>
+            <p><strong>Multi-stakeholder Notifications:</strong> Automated alerts keep all parties informed</p>
+        </div>
+    </div>
+</body>
+</html>
