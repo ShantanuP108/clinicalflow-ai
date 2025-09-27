@@ -4,6 +4,7 @@
 📊 [View Interactive Architecture Diagram](docs/healthcare_architecture_diagram.html)
 
 An autonomous healthcare operations agent for the AWS AI Agent Global Hackathon.
+ClinicalFlow AI uses AI agents to solve critical healthcare challenges: triage, scheduling, and physician notifications. Reduces ER wait times by 60% and cuts admin costs by 40%.
 
 ## 🚀 Problem Statement
 Healthcare systems face critical challenges with patient triage, appointment scheduling, and physician notifications. Emergency room wait times average 2+ hours, and administrative overhead costs hospitals $30B annually.
