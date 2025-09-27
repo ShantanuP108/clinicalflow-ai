@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-17'
+AWSTemplateFormatVersion: '2010-09-09'  # ✅ Fixed: was 2010-09-17
 Transform: AWS::Serverless-2016-10-31
 
 Globals:
@@ -10,7 +10,7 @@ Globals:
         USE_BEDROCK: "true"
 
 Resources:
-  ClinicalFlowApi:
+  ClinicalFlowApi:  # ✅ This defines your API Gateway
     Type: AWS::Serverless::Api
     Properties:
       StageName: prod
@@ -24,12 +24,14 @@ Resources:
     Properties:
       CodeUri: src/
       Handler: clinicalflow_ai.lambda_handler.lambda_handler
+      Runtime: python3.10  # ✅ Explicitly define runtime
       Events:
-        TriageApi:
-          Type: Api
+        TriageApi:  # ✅ This creates the API method
+          Type: Api  # ✅ This is the missing piece!
           Properties:
             Path: /triage
             Method: post
+            RestApiId: !Ref ClinicalFlowApi  # ✅ Link to your API
       Policies:
         - Version: '2012-10-17'
           Statement:
@@ -45,3 +47,5 @@ Outputs:
   ApiUrl:
     Description: "API Gateway endpoint URL"
     Value: !Sub "https://${ClinicalFlowApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
+    Export:
+      Name: ClinicalFlowApiUrl

@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-17'
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Globals:
   Function:
@@ -21,12 +21,15 @@ Resources:
     Properties:
       CodeUri: TriageFunction
       Handler: clinicalflow_ai.lambda_handler.lambda_handler
+      Runtime: python3.10
       Events:
         TriageApi:
           Type: Api
           Properties:
             Path: /triage
             Method: post
+            RestApiId:
+              Ref: ClinicalFlowApi
       Policies:
       - Version: '2012-10-17'
         Statement:
@@ -44,3 +47,5 @@ Outputs:
     Description: API Gateway endpoint URL
     Value:
       Fn::Sub: https://${ClinicalFlowApi}.execute-api.${AWS::Region}.amazonaws.com/prod/
+    Export:
+      Name: ClinicalFlowApiUrl

@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 from clinicalflow_ai.orchestrator import ClinicalFlowOrchestrator
 import os
 from dotenv import load_dotenv
@@ -10,8 +11,15 @@ app = FastAPI(
     description="Autonomous healthcare operations agent for AWS AI Agent Global Hackathon"
 )
 
+class TriageRequest(BaseModel):
+    symptoms: str
+    patient_id: str = "test-patient"
+
 @app.post("/triage")
-async def triage_patient(symptoms: str, patient_id: str = "test-patient"):
+async def triage_patient(request: TriageRequest):
     orchestrator = ClinicalFlowOrchestrator()
-    result = orchestrator.process_patient_request(symptoms, patient_id)
+    result = orchestrator.process_patient_request(
+        symptoms=request.symptoms,
+        patient_id=request.patient_id
+    )
     return result
