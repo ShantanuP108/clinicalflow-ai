@@ -12,6 +12,6 @@ An autonomous healthcare operations agent for the AWS AI Agent Global Hackathon.
 3. Run: `python src/clinicalflow_ai/orchestrator.py`
 
 **Architecture**
-📊 [View Interactive Architecture Diagram](https://shantanup108.github.io/clinicalflow-ai/docs/healthcare_architecture_diagram.html)
+📊 [View Interactive Architecture Diagram](docs/healthcare_architecture_diagram.htmll)
 
 ![Architecture Preview](docs/healthcare_architecture_diagram.png)
